@@ -36,24 +36,23 @@ func execExifTool(filepath string) time.Time {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("exifTool "+filepath+"-f")
-
-
-	fmt.Println(string(exifToolOut))
-	//return parseDate(string(exifToolOut))
-
-	return time.Now()
+	return parseDate(string(exifToolOut))
 }
 
-//func parseDate(exifTool string) time.Time {
-//	byt := []byte(exifTool)
-//	var dat map[string]interface{}
-//
-//	if err := json.Unmarshal(byt, &dat); err != nil {
-//		panic(err)
-//	}
-//	fmt.Println(dat)
-//	date := dat["CreateDate"].(time.Time)
-//	fmt.Println(date)
-//	return date
-//}
+func parseDate(exifTool string) time.Time {
+	exifToolOutput := exifTool[1:len(exifTool)-2]
+
+	bytexif := []byte(exifToolOutput)
+	var datexif map[string]interface{}
+	if err := json.Unmarshal(bytexif, &datexif); err != nil {
+		panic(err)
+	}
+	exifTimeLayout := "2006:01:02 15:04:05"
+	dateInDate, err := time.Parse(exifTimeLayout, datexif["CreateDate"].(string))
+	if err != nil {
+		panic(err)
+	}
+
+	//fmt.Println(date)
+	return dateInDate
+}
