@@ -1,0 +1,23 @@
+= Go-exif-renamer
+Benjamin Garcia <benjamin.garcia@protonmail.com>
+
+This project use exifTool to extract metadata to mass rename files in a folder.
+
+== Require
+
+- exifTool
+
+== How to
+
+on your command line, write : 
+
+[source,shell]
+.goRenamer
+----
+goRenamer /my/path/ 20060102
+----
+
+- path is not read recursivly
+- pattern use golang date format const (see https://golang.org/src/time/format.go[format.go]
+
+
