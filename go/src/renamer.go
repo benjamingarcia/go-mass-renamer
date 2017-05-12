@@ -25,6 +25,8 @@ func main() {
 		fmt.Println(fileExt)
 		datefile := execExifTool(folder+"/"+f.Name())
 		fmt.Println(datefile)
+		newName := folder+"/"+datefile.Format(pattern)+fileExt
+		os.Rename(folder+"/"+f.Name(), newName)
 		fmt.Println("==================")
 
 	}
@@ -48,6 +50,7 @@ func parseDate(exifTool string) time.Time {
 		panic(err)
 	}
 	exifTimeLayout := "2006:01:02 15:04:05"
+	fmt.Println(datexif["CreateDate"].(string))
 	dateInDate, err := time.Parse(exifTimeLayout, datexif["CreateDate"].(string))
 	if err != nil {
 		panic(err)
