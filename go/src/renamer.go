@@ -13,27 +13,32 @@ import (
 	"encoding/json"
 )
 
-
-
 func main() {
 	argsWithoutProg := os.Args[1:]
 	folder := argsWithoutProg[0]
 	pattern := argsWithoutProg[1]
-	fmt.Println(pattern)
+	rename(folder, pattern)
+}
+
+func rename(folder string, pattern string) {
 	files, _ := ioutil.ReadDir(folder)
 	for _, f := range files {
 
-		fileExt := filepath.Ext(f.Name())
-		fmt.Println(fileExt)
-		datefile, err := execExifTool(folder+"/"+f.Name())
-		if err != 1 {
-			newName := folder+"/"+datefile.Format(pattern)+fileExt
-			fmt.Println("Rename : "+f.Name()+" => "+datefile.Format(pattern)+fileExt)
-			os.Rename(folder+"/"+f.Name(), newName)
-		}else{
-			fmt.Println("No exif file")
+		if f.IsDir() {
+			rename(folder+"/"+f.Name(), pattern)
+		} else {
+			fileExt := filepath.Ext(f.Name())
+			fmt.Println(fileExt)
+			datefile, err := execExifTool(folder + "/" + f.Name())
+			if err != 1 {
+				newName := folder + "/" + datefile.Format(pattern) + fileExt
+				fmt.Println("Rename : " + f.Name() + " => " + datefile.Format(pattern) + fileExt)
+				os.Rename(folder+"/"+f.Name(), newName)
+			} else {
+				fmt.Println("No exif file")
+			}
+			fmt.Println("==================")
 		}
-		fmt.Println("==================")
 
 	}
 }
