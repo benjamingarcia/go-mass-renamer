@@ -13,6 +13,8 @@ import (
 	"encoding/json"
 )
 
+
+
 func main() {
 	argsWithoutProg := os.Args[1:]
 	folder := argsWithoutProg[0]
@@ -23,22 +25,26 @@ func main() {
 
 		fileExt := filepath.Ext(f.Name())
 		fmt.Println(fileExt)
-		datefile := execExifTool(folder+"/"+f.Name())
-		fmt.Println(datefile)
-		newName := folder+"/"+datefile.Format(pattern)+fileExt
-		os.Rename(folder+"/"+f.Name(), newName)
+		datefile, err := execExifTool(folder+"/"+f.Name())
+		if err != 1 {
+			newName := folder+"/"+datefile.Format(pattern)+fileExt
+			fmt.Println("Rename : "+f.Name()+" => "+datefile.Format(pattern)+fileExt)
+			os.Rename(folder+"/"+f.Name(), newName)
+		}else{
+			fmt.Println("No exif file")
+		}
 		fmt.Println("==================")
 
 	}
 }
 
-func execExifTool(filepath string) time.Time {
+func execExifTool(filepath string) (time.Time, int) {
 	exifToolCmd := exec.Command("exiftool", "-j", filepath)
 	exifToolOut, err := exifToolCmd.Output()
 	if err != nil {
-		panic(err)
+		return time.Now(), 1
 	}
-	return parseDate(string(exifToolOut))
+	return parseDate(string(exifToolOut)), 0
 }
 
 func parseDate(exifTool string) time.Time {
