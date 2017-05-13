@@ -17,7 +17,8 @@ on your command line, write :
 goRenamer /my/path/ 20060102
 ----
 
-- path is not read recursivly
-- pattern use golang date format const (see https://golang.org/src/time/format.go[format.go]
+- parsing is recursive
+- pattern use golang date format const (see https://golang.org/src/time/format.go[format.go])
+- apply rename on exifTool file only (see http://owl.phy.queensu.ca/~phil/exiftool/#supported[file extension])
 
 
